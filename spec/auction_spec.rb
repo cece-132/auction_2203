@@ -33,16 +33,12 @@ RSpec.describe Auction do
     end
   end
 
-  describe "Iteration II" do
+  describe "Iteration II and III" do
     before :each do
 
       @item3 = Item.new('Homemade Chocolate Chip Cookies')
       @item4 = Item.new('2 Days Dogsitting')
       @item5 = Item.new('Forever Stamps')
-
-      @auction.add_item(@item3)
-      @auction.add_item(@item4)
-      @auction.add_item(@item5)
 
       @attendee1 = Attendee.new({name: 'Megan', budget: '$50'})
       @attendee2 = Attendee.new({name: 'Bob', budget: '$75'})
@@ -75,6 +71,50 @@ RSpec.describe Auction do
         expect(@auction.potential_revenue).to eq 87
       end
     end
-    
+
+    describe '#bidders' do
+      it 'returns an array of attendees that have bid on items' do
+        @item3.add_bid(@attendee2, 15)
+        expect(@auction.bidders).to be_a Array
+        expect(@auction.bidders.length).to eq 3
+        expect(@auction.bidders).to eq ["Bob", "Megan", "Mike"]
+      end
+    end
+
+    describe '#close_bidding' do
+      it 'doesnt add bids to item when bid has closed' do
+        bids = { @attendee2 => 20, @attendee1 => 22 }
+        @item1.close_bidding
+        @item1.add_bid(@attendee3, 70)
+        expect(@item1.bids).to eq bids
+      end
+    end
+
+    describe '#bidder_info' do
+      it 'returns a hash with attendee as key, their budget, and an arrat of item bid on' do
+        @item3.add_bid(@attendee2, 15)
+        @item1.add_bid(@attendee3, 70)
+
+        expected = {
+             @attendee1 =>
+               {
+                 :budget => 50,
+                 :items => [@item1]
+               },
+             @attendee2 =>
+               {
+                 :budget => 75,
+                 :items => [@item1, @item3]
+               },
+             @attendee3 =>
+               {
+                 :budget => 100,
+                 :items => [@item1, @item4]
+               }
+            }
+        expect(@auction.bidder_info).to be_a Hash
+        expect(@auction.bidder_info).to eq expected
+      end
+    end
   end
 end
