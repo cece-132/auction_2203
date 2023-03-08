@@ -7,13 +7,11 @@ RSpec.describe Item do
     @item2 = Item.new('Bamboo Picture Frame')
   end
 
-  it "exists" do
-
-    expect(@item1).to be_a(Item)
-  end
-
-  it "has attributes" do
-
-    expect(@item1.name).to eq('Chalkware Piggy Bank')
+  describe '#initialize' do
+    it 'exists and has attributes' do
+      expect(@item1).to be_a(Item)
+      expect(@item1.name).to be_a String
+      expect(@item1.name).to eq('Chalkware Piggy Bank')
+    end
   end
 end

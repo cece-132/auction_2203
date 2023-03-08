@@ -3,8 +3,7 @@ class Attendee
 
   def initialize(attributes)
     @name = attributes[:name]
-    @budget = attributes[:budget]
-
+    @budget = attributes[:budget].to_i
   end
 
 end
