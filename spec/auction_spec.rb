@@ -4,43 +4,33 @@ require './lib/auction'
 
 RSpec.describe Auction do
   before :each do
-
     @auction = Auction.new
+    @item1 = Item.new('Chalkware Piggy Bank')
+    @item2 = Item.new('Bamboo Picture Frame')
   end
 
-  it "exists" do
-
-    expect(@auction).to be_a(Auction)
+  describe '#initialize' do
+    it 'exists and has attributes' do
+      expect(@auction).to be_a(Auction)
+      expect(@auction.items).to be_a Array
+      expect(@auction.items).to be_empty
+    end
   end
 
-  it "has attributes" do
-
-    expect(@auction.items).to eq([])
-  end
-
-  describe 'Adding Items' do
-    before :each do
-
-      @item1 = Item.new('Chalkware Piggy Bank')
-      @item2 = Item.new('Bamboo Picture Frame')
-
+  describe '#add_item(item)' do
+    it 'can add an item to an auction' do
       @auction.add_item(@item1)
       @auction.add_item(@item2)
+      expect(@auction.items).to eq([@item1,@item2])
     end
-
-    it "can add items" do
-
-      expect(@auction.items).to eq([@item1,@item2]) #got ahead of myself here
-    end
-
-    xit "can return all the auction item names in an array" do
-
+  end
+  
+  describe '#item_names' do
+    it "can return all the auction item names in an array" do
+      @auction.add_item(@item1)
+      @auction.add_item(@item2)
       expect(@auction.item_names).to eq(["Chalkware Piggy Bank", "Bamboo Picture Frame"])
-      #getting stuck on the code here @11:07
-      #still stuck @11:22
-      # Not wasting any more time I'll try and come back later @11:25
     end
-
   end
 
   describe "Iteration II" do
@@ -59,12 +49,32 @@ RSpec.describe Auction do
       @attendee3 = Attendee.new({name: 'Mike', budget: '$100'})
 
       @auction = Auction.new
+
+      @auction.add_item(@item1)
+      @auction.add_item(@item2)
+      @auction.add_item(@item3)
+      @auction.add_item(@item4)
+      @auction.add_item(@item5)
+
+      @item1.add_bid(@attendee2, 20)
+      @item1.add_bid(@attendee1, 22)
+      @item4.add_bid(@attendee3, 50)
     end
 
-    it "can bid on items" do
-
-      expect(@item1.bids).to eq({})
-      #Taking a pom @11:40, back @11:50
+    describe '#unpopular_items' do
+      it 'returns and array of items with no bids' do
+        expect(@auction.unpopular_items).to eq [@item2, @item3, @item5]
+        expect(@auction.unpopular_items).to_not include(@item1)
+        expect(@auction.unpopular_items).to_not include(@item4)
+      end
     end
+
+    describe 'potential_revenue' do
+      it 'returns the sum of the highest bids for each item' do
+        @item3.add_bid(@attendee2, 15)
+        expect(@auction.potential_revenue).to eq 87
+      end
+    end
+    
   end
 end

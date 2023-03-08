@@ -12,27 +12,21 @@ class Auction
   end
 
   def item_names
-    names_of_items = []
-  #  binding.pry
-  # return and array of just the item names
-  # I have access to @items
-  # how do I call the name attribute of those items?
-  # tried items.name, @items.names, name, item.name
-  end
-
-  def bids
-    item_bids = {}
     @items.map do |item|
-      item_bids[item] = @item.bids
-
-    end
-    #Attendee being the key and the bids being the value
-
+      item.name
+    end    
   end
 
-  def add_bid(attendee, bid)
+  def unpopular_items
+    items.map do |item|
+      item if item.bids.empty?
+    end.compact
+  end
 
-
+  def potential_revenue
+    @items.sum do |item|
+      item.current_high_bid
+    end
   end
 
 end
