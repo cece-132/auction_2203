@@ -116,5 +116,25 @@ RSpec.describe Auction do
         expect(@auction.bidder_info).to eq expected
       end
     end
+
+    describe '#date' do
+      it 'shows the date that the auction was created' do
+        expect(@auction.date).to eq DateTime.now.strftime('%d/%m/%y')
+      end
+    end
+
+    describe '#close_auction' do
+      it 'returns a hash of items and the sold status' do
+        expected = {
+          @item1 => @attendee1,
+          @item2 => 'Not Sold',
+          @item3 => 'Not Sold',
+          @item4 => @attendee3,
+          @item5 =>'Not Sold'
+        }
+        expect(@auction.close_auction).to be_a Hash
+        expect(@auction.close_auction).to eq expected
+      end
+    end
   end
 end

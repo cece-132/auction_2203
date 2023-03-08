@@ -1,10 +1,16 @@
 require 'pry'
+require 'date'
 
 class Auction
-  attr_reader :items
+  attr_reader :items, :created_on
 
   def initialize
     @items = []
+    @created_on = DateTime.now
+  end
+
+  def date
+    @created_on.strftime('%d/%m/%y')
   end
 
   def add_item(item)
@@ -58,6 +64,18 @@ class Auction
     @items.each do |item|
       item.bids.each do |attendee, bid|
         hash[attendee] = {budget: attendee.budget, items: []}
+      end
+    end
+    hash
+  end
+
+  def close_auction
+    hash = {}
+    @items.each do |item|
+      if item.attendee_current_high_bid.nil?
+        hash[item] = 'Not Sold'
+      else
+        hash[item] = item.attendee_current_high_bid
       end
     end
     hash

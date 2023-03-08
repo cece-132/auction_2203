@@ -20,6 +20,15 @@ class Item
     end
   end
 
+  def attendee_current_high_bid
+    high_bid = @bids.max_by { |attendee, amount| amount }
+    if high_bid.nil?
+      nil
+    else
+      high_bid[0]
+    end
+  end
+
   
   def close_bidding
     @open_bid = false
